@@ -10,7 +10,11 @@ Your responses will each be evaluated out of 3 points for writing quality and 3 
 
 The Todo Tracker API is a **RESTful** API. Identify at least **3 specific design decisions** in the API that make it RESTful, and explain what each one communicates to a client developer. Consider the URL structure, HTTP methods, and status codes used.
 
-**Your answer here**:
+**Your answer here**: The aspects that make the Todo Tracker API restful are:
+1. the endpoint URLs indicate resources, not actions. This indicates the user what kind of data they can expect to process.
+2. clear usage of HTTP methods. This will help the user decide the action they can perform (e.g. `GET`, `POST`);
+3. status code provide the request information results. For instance, the server sends back a **200** when the data was successfully retrieved or **201** is a newly piece of data was sucessfully created.
+4. the endpoints follow a clear hierarchy of resources, using ids to get specific resources (e.g. **api/todos/:id).
 
 ---
 
@@ -18,7 +22,7 @@ The Todo Tracker API is a **RESTful** API. Identify at least **3 specific design
 
 What problem is caused by mixing data logic and request/response logic in a single file? What does separating them into a model and controller enable? Be specific about what gets harder and what gets easier.
 
-**Your answer here**:
+**Your answer here**: Having data logic and request/response logic in a single file creates a **code monolith**. This makes the application hard to maintain, organize, and scale as everything lives in one file. By having a model and a controller enables **separation of concerns** and makes adding more logic/features easier to target for scability, debugging, and organizing.
 
 ---
 
@@ -26,7 +30,14 @@ What problem is caused by mixing data logic and request/response logic in a sing
 
 Walk through what happens, step by step, when the user clicks a checkbox to toggle a todo's `isDone` field. Name each file and function in your MVC structure that gets involved, in the order it runs, and describe what it does.
 
-**Your answer here**:
+**Your answer here**: 
+1. the `handleTodosListClick` checks if the `toggle-btn` was pressed in the `frontend/src/main.js` file.
+2. `handleTodosListClick` calls the `updateTodo` function then it goes to `frontend/src/fetch-helpers.js`.
+3. the frontend's`updateTodo` method sends a `PATCH` request to the server's endpoint `/api/todos/:id` in the `server/index.js` file.
+4. the middleware intercept all requests and directs them to the respective controller in the `server/controllers/todoControllers.js` file.
+5. the controllers' `updateGame` reads the response and calls the `update` method from the `server/model/todoModel.js` file.
+6. the `update` method lookds fot the game with a specific id, updates its properties and returns the updated value to the controllers' `updateGame` method.
+7. lastly, the controller sends the response back to the frontend and displays it to the client.
 
 ---
 
@@ -45,3 +56,8 @@ const createTodo = (req, res) => {
 ```
 
 **Your answer here**:
+Line 1 belongs to the controller because it handles the request logic from the client.
+Line 2 belongs to the controller because the logic forms part of the server handling the logic for the response.
+Line 3 belongs to the model because it's dealing with data directly. This is logic handled by the "database"/model.
+Line 4 belongs to the model because is handling data tied to the "database".
+Line 5 belongs to the model because it's sending a server response to the client communicating the status code and the data.
